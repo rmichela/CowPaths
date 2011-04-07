@@ -65,17 +65,14 @@ public class StepPlugin extends JavaPlugin {
 	
 	@Override
 	public void onEnable() {
-		if (loadError) {
+		if (!loadError) {
+			log.info("[Cow Paths] Now paving cow paths. Happy trails!");
 			StepPlayerListener spl = new StepPlayerListener(controller);
-			getServer().getPluginManager().registerEvent(Type.PLAYER_MOVE, spl,
-					Priority.Normal, this);
-			getServer().getPluginManager().registerEvent(Type.PLAYER_TELEPORT,
-					spl, Priority.Normal, this);
+			getServer().getPluginManager().registerEvent(Type.PLAYER_MOVE, spl, Priority.Normal, this);
+			getServer().getPluginManager().registerEvent(Type.PLAYER_TELEPORT, spl, Priority.Normal, this);
 			StepWorldListener swl = new StepWorldListener(controller);
-			getServer().getPluginManager().registerEvent(Type.CHUNK_LOAD, swl,
-					Priority.Normal, this);
-			getServer().getPluginManager().registerEvent(Type.CHUNK_UNLOAD,
-					swl, Priority.Normal, this);
+			getServer().getPluginManager().registerEvent(Type.CHUNK_LOAD, swl, Priority.Normal, this);
+			getServer().getPluginManager().registerEvent(Type.CHUNK_UNLOAD, swl, Priority.Normal, this);
 		}
 	}
 
