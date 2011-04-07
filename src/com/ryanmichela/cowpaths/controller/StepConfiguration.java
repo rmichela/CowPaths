@@ -92,7 +92,7 @@ public class StepConfiguration {
 		public int stepThreshhold() { return stepThreshhold; }
 		
 		public String toString() {
-			return "Wear Pattern: " + fromMaterial + " => " + toMaterial + " - " + stepThreshhold + " steps";
+			return "Wear Pattern: " + fromMaterial + " => " + toMaterial + " (" + stepThreshhold + " steps)";
 		}
 	}
 }

@@ -1,0 +1,41 @@
+   ______                 ____        __  __                    (__)
+  / ____/___ _      __   / __ \____ _/ /_/ /_  _____            (oo)
+ / /   / __ \ | /| / /  / /_/ / __ `/ __/ __ \/ ___/     /-------\/
+/ /___/ /_/ / |/ |/ /  / ____/ /_/ / /_/ / / (__  )     / |     || 
+\____/\____/|__/|__/  /_/    \__,_/\__/_/ /_/____/     *  ||----||
+                                                          ^^    ^^
+====================================================================
+
+1. Overview
+   Cow Paths is a bukkit plugin for simulating the natural erosion
+   caused by player walking. The name of the plugin comes from the
+   phrase "to pave the cow paths." As players walk around the
+   server, Cow Paths keeps track of the number of times each block
+   has been stepped on and erodes the world accordingly. By default,
+   the world erosion patterns are (with step thresholds in
+   parentheses):
+   
+     Grass -(10)-> Dirt -(50)-> Gravel -(200)-> Cobblestone 
+           -(800)-> Smooth Stone
+      
+     Sand  -(100)-> Sandstone
+     
+2. Configuration
+   The erosion patters and step thresholds used by Cow Paths are
+   completely configurable. All wear patterns are stored in the
+   config.yml file under the wearPatterns key. A wear pattern
+   is made up of a three part string containing the fromMaterial,
+   toMaterial, and stepThreshold. A line looks like this:
+   
+     - Grass Dirt 10
+     
+   When defining the fromMaterial and toMaterial, you can use
+   either a material's canonical name or ID number. Malformed wear
+   patterns will be ignored. If two wear patterns share the same
+   fromMaterial, only the first one will be used.
+   
+3. Contact
+   Cow Paths is written by Ryan Michela (deltahat@gmail.com)
+
+
+
