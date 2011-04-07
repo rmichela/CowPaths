@@ -42,6 +42,7 @@ public class StepController {
 		this.config = config;
 		this.log = plugin.getServer().getLogger();
 		dataDir = plugin.getDataFolder();
+		if(!dataDir.exists()) dataDir.mkdir();
 	}
 	
 	/**
@@ -68,8 +69,7 @@ public class StepController {
 			// Locate the first wear pattern that starts with the current
 			// block material and apply it if necessary
 			for(WearPattern wp : config.getWearPatterns()) {
-				if(sd.lastKnownMaterial == wp.fromMaterial() && 
-				   sd.stepCount >= wp.stepThreshhold()) {
+				if(sd.lastKnownMaterial == wp.fromMaterial() && sd.stepCount >= wp.stepThreshhold()) {
 					block.setType(wp.toMaterial());
 				}
 			}
@@ -88,7 +88,7 @@ public class StepController {
 			WorldStepData wsd = getWsd(chunk.getWorld());
 			wsd.pageInChunk(chunk);
 		} catch (Exception e) {
-			log.log(Level.SEVERE, "[Cow Paths] Error loading paging in chunk step data.", e);
+			log.log(Level.SEVERE, "[Cow Paths] Error paging in chunk step data.", e);
 		}
 	}
 	
@@ -101,7 +101,30 @@ public class StepController {
 			WorldStepData wsd = getWsd(chunk.getWorld());
 			wsd.pageOutChunk(chunk);
 		} catch (Exception e) {
-			log.log(Level.SEVERE, "[Cow Paths] Error loading paging in chunk step data.", e);
+			log.log(Level.SEVERE, "[Cow Paths] Error paging out chunk step data.", e);
+		}
+	}
+	
+	/**
+	 * Loads into memory all active chunks in a world
+	 * @param world
+	 */
+	public void prime(World world) {
+		for(Chunk chunk : world.getLoadedChunks()) {
+			loadChunk(chunk);
+		}
+	}
+	
+	/**
+	 * Flushes all loaded chunks to disk
+	 */
+	public void flush() {
+		try {
+			for(WorldStepData wsd : worldStepDatas.values()) {
+				wsd.flush();
+			}
+		} catch (Exception e) {
+			log.log(Level.SEVERE, "[Cow Paths] Error flushing out chunk step data.", e);
 		}
 	}
 	

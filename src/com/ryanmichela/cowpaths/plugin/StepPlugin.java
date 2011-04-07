@@ -21,12 +21,14 @@ import java.io.OutputStreamWriter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.bukkit.World;
 import org.bukkit.event.Event.Priority;
 import org.bukkit.event.Event.Type;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.ryanmichela.cowpaths.controller.StepConfiguration;
 import com.ryanmichela.cowpaths.controller.StepController;
+import com.ryanmichela.cowpaths.controller.StepConfiguration.WearPattern;
 
 public class StepPlugin extends JavaPlugin {
 
@@ -56,6 +58,10 @@ public class StepPlugin extends JavaPlugin {
 	
 			config = new StepConfiguration(this);
 			controller = new StepController(this, config);
+			
+			for(WearPattern wp: config.getWearPatterns()) {
+				log.info("[Cow Paths] " + wp);
+			}
 		
 		} catch (Exception e) {
 			log.log(Level.SEVERE, "[Cow Paths] Error in initialization.", e);
@@ -66,18 +72,28 @@ public class StepPlugin extends JavaPlugin {
 	@Override
 	public void onEnable() {
 		if (!loadError) {
-			log.info("[Cow Paths] Now paving cow paths. Happy trails!");
+			// Wire up event listeners
 			StepPlayerListener spl = new StepPlayerListener(controller);
 			getServer().getPluginManager().registerEvent(Type.PLAYER_MOVE, spl, Priority.Normal, this);
 			getServer().getPluginManager().registerEvent(Type.PLAYER_TELEPORT, spl, Priority.Normal, this);
 			StepWorldListener swl = new StepWorldListener(controller);
 			getServer().getPluginManager().registerEvent(Type.CHUNK_LOAD, swl, Priority.Normal, this);
 			getServer().getPluginManager().registerEvent(Type.CHUNK_UNLOAD, swl, Priority.Normal, this);
+			
+			// Prime the active chunk data
+			for(World world : getServer().getWorlds()) {
+				controller.prime(world);
+			}
+			
+			log.info("[Cow Paths] Now paving cow paths. Happy trails!");
 		}
 	}
 
 	@Override
 	public void onDisable() {
-		
+		if(!loadError) {
+			log.info("[Cow Paths] Flushing block data.");
+			controller.flush();
+		}
 	}
 }

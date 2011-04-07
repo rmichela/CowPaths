@@ -38,7 +38,8 @@ public class WorldStepData {
 	
 	public WorldStepData(File pageDirectory, World world) {
 		if(!pageDirectory.isDirectory()) throw new IllegalArgumentException("Page directory must be a directory");
-		this.worldPageDirectory = new File(pageDirectory, world.getName());
+		worldPageDirectory = new File(pageDirectory, world.getName());
+		if(!worldPageDirectory.exists()) worldPageDirectory.mkdir();
 	}
 	
 	/**
@@ -88,11 +89,11 @@ public class WorldStepData {
 	 * @param chunk
 	 * @throws Exception
 	 */
-	public void pageOutChunk(Chunk chunk) throws Exception{
+	public void pageOutChunk(Chunk chunk) throws Exception {
 		String chunkKey = ChunkStepData.makeKey(chunk);
 		
 		if(!chunks.containsKey(ChunkStepData.makeKey(chunk))) {
-			throw new IllegalArgumentException("Chunk " + chunkKey + " is not loaded.");
+			return;
 		}
 		
 		// Write the ChunkStepData to disk
@@ -102,5 +103,19 @@ public class WorldStepData {
 		oStream.close();
 		
 		chunks.remove(chunkKey);
+	}
+	
+	/**
+	 * Flushes all loaded chunks to disk
+	 * @throws Exception
+	 */
+	public void flush() throws Exception {
+		for(ChunkStepData csd : chunks.values()) {
+			// Write the ChunkStepData to disk
+			File csdPageFile = new File(worldPageDirectory, csd.chunkKey());
+			ObjectOutputStream oStream = new ObjectOutputStream(new FileOutputStream(csdPageFile));
+			oStream.writeObject(csd);
+			oStream.close();
+		}
 	}
 }

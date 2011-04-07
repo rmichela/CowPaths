@@ -48,7 +48,6 @@ public class StepConfiguration {
 				plugin.getServer().getLogger().warning("[Cow Paths] " + e.getMessage());
 			}
 		}
-		
 		return wearPatterns;
 	}
 	
@@ -91,5 +90,9 @@ public class StepConfiguration {
 		public Material fromMaterial() { return fromMaterial; }
 		public Material toMaterial() { return toMaterial; }
 		public int stepThreshhold() { return stepThreshhold; }
+		
+		public String toString() {
+			return "Wear Pattern: " + fromMaterial + " => " + toMaterial + " - " + stepThreshhold + " steps";
+		}
 	}
 }

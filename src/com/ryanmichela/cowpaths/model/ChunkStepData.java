@@ -99,7 +99,7 @@ public class ChunkStepData implements Serializable{
 	 * @return
 	 */
 	private boolean isBlockInChunk(int bx, int bz) {
-		return (bx - chunkX < 16) && (bx - chunkX >= 0) &&
-		       (bz - chunkZ < 16) && (bz - chunkZ >= 0);
+		return (bx - chunkX*16 < 16) && (bx - chunkX*16 >= 0) &&
+		       (bz - chunkZ*16 < 16) && (bz - chunkZ*16 >= 0);
 	}
 }

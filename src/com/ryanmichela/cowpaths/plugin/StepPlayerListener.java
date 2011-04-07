@@ -15,6 +15,8 @@
 
 package com.ryanmichela.cowpaths.plugin;
 
+import org.bukkit.Location;
+import org.bukkit.block.BlockFace;
 import org.bukkit.event.player.PlayerListener;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
@@ -31,7 +33,10 @@ public class StepPlayerListener extends PlayerListener {
 	
 	@Override
 	public void onPlayerMove(PlayerMoveEvent event) {
-		controller.stepOnBlock(event.getTo().getBlock());
+		if(!samePlace(event.getFrom(), event.getTo())) {
+			// Get the block below the block the player's feet are in.
+			controller.stepOnBlock(event.getTo().getBlock().getRelative(BlockFace.DOWN));
+		}
 	}
 
 	@Override
@@ -39,4 +44,9 @@ public class StepPlayerListener extends PlayerListener {
 		onPlayerMove((PlayerMoveEvent)event);
 	}
 
+	private boolean samePlace(Location l1, Location l2) {
+		return (l1.getBlockX() == l2.getBlockX()) &&
+		       (l1.getBlockY() == l2.getBlockY()) &&
+		       (l1.getBlockZ() == l2.getBlockZ());
+	}
 }
