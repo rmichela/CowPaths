@@ -56,7 +56,7 @@ public class StepConfiguration {
 	 * Returns the contents of the default config file
 	 * @return
 	 */
-	public String initialConfigFile() {
+	public static String initialConfigFile() {
 		return 
 		       "#Format: fromMaterial toMaterial stepThreshhold\n" +
 		       "wearPatterns:\n" +

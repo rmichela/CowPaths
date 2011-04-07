@@ -15,6 +15,12 @@
 
 package com.ryanmichela.cowpaths.plugin;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.bukkit.event.Event.Priority;
 import org.bukkit.event.Event.Type;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -26,27 +32,55 @@ public class StepPlugin extends JavaPlugin {
 
 	private StepController controller;
 	private StepConfiguration config;
+	private Logger log;
+	private boolean loadError;
 	
 	@Override
 	public void onLoad() {
-		config = new StepConfiguration(this);
-		controller = new StepController(this, config);
+		try {
+			log = getServer().getLogger();
+			
+			// Initialize configuration
+			if(!getDataFolder().exists()) {
+				getDataFolder().mkdir();
+				
+				log.info("[Cow Paths] Populating initial config file");
+				OutputStreamWriter out = new OutputStreamWriter(
+											new FileOutputStream(
+												new File(getDataFolder(), "config.yml")));
+				out.write(StepConfiguration.initialConfigFile());
+				out.close();
+				
+				getConfiguration().load();
+			}
+	
+			config = new StepConfiguration(this);
+			controller = new StepController(this, config);
+		
+		} catch (Exception e) {
+			log.log(Level.SEVERE, "[Cow Paths] Error in initialization.", e);
+			loadError = true;
+		}
 	}
 	
 	@Override
 	public void onEnable() {
-		StepPlayerListener spl = new StepPlayerListener(controller);
-		getServer().getPluginManager().registerEvent(Type.PLAYER_MOVE, spl, Priority.Normal, this);
-		getServer().getPluginManager().registerEvent(Type.PLAYER_TELEPORT, spl, Priority.Normal, this);
-		
-		StepWorldListener swl = new StepWorldListener(controller);
-		getServer().getPluginManager().registerEvent(Type.CHUNK_LOAD, swl, Priority.Normal, this);
-		getServer().getPluginManager().registerEvent(Type.CHUNK_UNLOAD, swl, Priority.Normal, this);
+		if (loadError) {
+			StepPlayerListener spl = new StepPlayerListener(controller);
+			getServer().getPluginManager().registerEvent(Type.PLAYER_MOVE, spl,
+					Priority.Normal, this);
+			getServer().getPluginManager().registerEvent(Type.PLAYER_TELEPORT,
+					spl, Priority.Normal, this);
+			StepWorldListener swl = new StepWorldListener(controller);
+			getServer().getPluginManager().registerEvent(Type.CHUNK_LOAD, swl,
+					Priority.Normal, this);
+			getServer().getPluginManager().registerEvent(Type.CHUNK_UNLOAD,
+					swl, Priority.Normal, this);
+		}
 	}
 
 	@Override
 	public void onDisable() {
-		// TODO Auto-generated method stub
 		
 	}
 }
