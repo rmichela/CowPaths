@@ -43,6 +43,7 @@ public class StepData implements Serializable{
 	public Material lastKnownMaterial;
 	
 	public int stepCount;
+	public int totalSteps;
 
 	/**
 	 * Gets this block's unique block key

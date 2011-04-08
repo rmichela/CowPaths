@@ -65,6 +65,7 @@ public class StepController {
 			
 			// Increment the step count
 			sd.stepCount++;
+			sd.totalSteps++;
 			
 			// Locate the first wear pattern that starts with the current
 			// block material and apply it if necessary
@@ -125,6 +126,28 @@ public class StepController {
 			}
 		} catch (Exception e) {
 			log.log(Level.SEVERE, "[Cow Paths] Error flushing out chunk step data.", e);
+		}
+	}
+	
+	public int getStepCount(Block block) {
+		try {
+			WorldStepData wsd = getWsd(block.getWorld());
+			StepData sd = wsd.getStepData(block);
+			return sd.stepCount;
+		} catch(Exception e) {
+			log.log(Level.SEVERE, "[Cow Paths] Error loading step data.", e);
+			return 0;
+		}
+	}
+	
+	public int getTotalSteps(Block block) {
+		try {
+			WorldStepData wsd = getWsd(block.getWorld());
+			StepData sd = wsd.getStepData(block);
+			return sd.totalSteps;
+		} catch(Exception e) {
+			log.log(Level.SEVERE, "[Cow Paths] Error loading step data.", e);
+			return 0;
 		}
 	}
 	

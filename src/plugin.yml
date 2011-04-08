@@ -1,6 +1,6 @@
 name: CowPaths
-main: com.ryanmichela.cowpaths.plugin.StepPlugin
-version: 1
+main: com.ryanmichela.cowpaths.plugin.CowPaths
+version: 2
 website: https://github.com/rmichela/CowPaths
 author: Ryan Michela
 description: >
